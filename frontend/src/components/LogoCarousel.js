@@ -3,22 +3,30 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const logos = [
-  "https://picsum.photos/100", // replace these with your logo URLs
-  "https://picsum.photos/100",
-  "https://picsum.photos/100",
-  "https://picsum.photos/100",
-  "https://picsum.photos/100",
+  "https://picsum.photos/900", // replace these with your logo URLs
+  "https://picsum.photos/800",
+  "https://picsum.photos/700",
+  "https://picsum.photos/400",
+  "https://picsum.photos/500",
 ];
 
 const LogoCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(2); // Start with the center index
 
+  const handleScroll = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % logos.length);
+  };
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % logos.length);
-    }, 3000);
-    return () => clearInterval(interval);
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
+
+  const handleMouseEnter = (index) => {
+    setCurrentIndex(index);
+  };
 
   return (
     <div
@@ -32,18 +40,19 @@ const LogoCarousel = () => {
     >
       {logos.map((logo, index) => {
         const isCenter = index === currentIndex;
-        const size = isCenter ? 150 : 100; // Adjust size for centered image
+        const size = isCenter ? 200 : 150; // Adjust size for centered image
         const zIndex = isCenter ? 1 : 0;
 
         return (
           <motion.div
             key={index}
             animate={{
-              opacity: isCenter ? 1 : 0.5,
+              opacity: isCenter ? 1 : 0.6,
               filter: isCenter ? "none" : "blur(4px)",
               scale: isCenter ? 1.2 : 1,
             }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.3 }}
+            onMouseEnter={() => handleMouseEnter(index)}
             style={{ margin: "0 20px", zIndex }}
           >
             <img
