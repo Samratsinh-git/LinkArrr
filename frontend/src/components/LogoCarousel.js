@@ -1,70 +1,105 @@
-// LogoCarousel.js
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useTransform, useScroll } from "framer-motion";
+import { useRef } from "react";
 
-const logos = [
-  "https://picsum.photos/900", // replace these with your logo URLs
-  "https://picsum.photos/800",
-  "https://picsum.photos/700",
-  "https://picsum.photos/400",
-  "https://picsum.photos/500",
-];
-
-const LogoCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(2); // Start with the center index
-
-  const handleScroll = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % logos.length);
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const handleMouseEnter = (index) => {
-    setCurrentIndex(index);
-  };
-
+const Example = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden",
-        width: "100%",
-      }}
-    >
-      {logos.map((logo, index) => {
-        const isCenter = index === currentIndex;
-        const size = isCenter ? 200 : 150; // Adjust size for centered image
-        const zIndex = isCenter ? 1 : 0;
-
-        return (
-          <motion.div
-            key={index}
-            animate={{
-              opacity: isCenter ? 1 : 0.6,
-              filter: isCenter ? "none" : "blur(4px)",
-              scale: isCenter ? 1.2 : 1,
-            }}
-            transition={{ duration: 0.3 }}
-            onMouseEnter={() => handleMouseEnter(index)}
-            style={{ margin: "0 20px", zIndex }}
-          >
-            <img
-              src={logo}
-              alt={`logo-${index}`}
-              style={{ width: size, height: size }}
-            />
-          </motion.div>
-        );
-      })}
+    <div className="bg-neutral-800">
+      <div className="flex h-48 items-center justify-center">
+        <span className="font-semibold uppercase text-neutral-500">
+          Scroll down
+        </span>
+      </div>
+      <HorizontalScrollCarousel />
+      <div className="flex h-48 items-center justify-center">
+        <span className="font-semibold uppercase text-neutral-500">
+          Scroll up
+        </span>
+      </div>
     </div>
   );
 };
 
-export default LogoCarousel;
+const HorizontalScrollCarousel = () => {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+  });
+
+  const x = useTransform(scrollYProgress, [0, 1], ["1%", "-95%"]);
+
+  return (
+    <section ref={targetRef} className="relative h-[300vh] bg-neutral-900">
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+        <motion.div style={{ x }} className="flex gap-4">
+          {cards.map((card) => {
+            return <Card card={card} key={card.id} />;
+          })}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+const Card = ({ card }) => {
+  return (
+    <div
+      key={card.id}
+      className="group relative h-[450px] w-[450px] overflow-hidden bg-neutral-200"
+    >
+      <div
+        style={{
+          backgroundImage: `url(${card.url})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        className="absolute inset-0 z-0 transition-transform duration-300 group-hover:scale-110"
+      ></div>
+      <div className="absolute inset-0 z-10 grid place-content-center">
+        <p className="bg-gradient-to-br from-white/20 to-white/0 p-8 text-6xl font-black uppercase text-white backdrop-blur-lg">
+          {card.title}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+
+const cards = [
+  {
+    url: "https://picsum.photos/500",
+    title: "Title 1",
+    id: 1,
+  },
+  {
+    url: "https://picsum.photos/600",
+    title: "Title 2",
+    id: 2,
+  },
+  {
+    url: "https://picsum.photos/700",
+    title: "Title 3",
+    id: 3,
+  },
+  {
+    url: "https://picsum.photos/500",
+    title: "Title 4",
+    id: 4,
+  },
+  {
+    url: "https://picsum.photos/600",
+    title: "Title 5",
+    id: 5,
+  },
+  {
+    url: "https://picsum.photos/700",
+    title: "Title 6",
+    id: 6,
+  },
+  {
+    url: "https://picsum.photos/800",
+    title: "Title 7",
+    id: 7,
+  },
+];
+
+export default Example;

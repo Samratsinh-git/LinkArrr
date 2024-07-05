@@ -27,13 +27,11 @@ const UserPage = () => {
   const [isuserData, isSetuserData] = useState(false);
   const navigate = useNavigate();
   const classes = useStyles();
-  // const location = useLocation();
-  // const user = location.state.user;
+
   const user = useContext(HomeContext);
   const token = localStorage.getItem("token");
   console.log(token);
   const history = useNavigate();
-  // const [conn,setConn] = useState();
 
   useEffect(() => {
     if (user.link == null) {
@@ -62,15 +60,15 @@ const UserPage = () => {
   };
   useEffect(() => {
     callUserPage();
-  }, [user]);
+  }, [user]); 
 
   return (
     <React.Fragment>
-      <div style={{ padding: '50px', textAlign: 'center' }}>
-      <h1>Logo Carousel</h1>
-      <LogoCarousel />
-    </div>
-      {/* <Paper className={classes.root}>
+      {/* <div style={{ padding: '50px', textAlign: 'center' }}> */}
+      {/* <h1>Your added Socials</h1> */}
+      {/* <LogoCarousel /> */}
+    {/* </div> */}
+      <Paper className={classes.root}>
         <HideAppBar />
         {isuserData && (
           <>
@@ -96,7 +94,7 @@ const UserPage = () => {
             </Box>
           </>
         )}
-      </Paper> */}
+      </Paper>
     </React.Fragment>
   );
 };
